@@ -11,98 +11,20 @@ eclair_to_fritter_pass = 0
 eclair_to_eclair_pass = 0
 fritter_to_eclair_pass = 0
 
-stats = pd.read_csv('stats.csv')
+stats = pd.read_csv('Donuts-stats.csv')
 gender = pd.read_csv('gender.csv')
+player_names = []
 
-total_passes_to_eclairs = {
-    "Anonymous": 0,
-    "Ali": 0,
-    "Annie": 0,
-    "Ella": 0,
-    "G": 0,
-    "Karin": 0,
-    "Katie P": 0,
-    "Ash": 0,
-    "Chewy": 0,
-    "Rachel": 0,
-    "Fina": 0,
-    "Tuna": 0,
-    "Visakha": 0,
-    "Alec": 0,
-    "Dzak": 0,
-    "Davin": 0,
-    "Jack A": 0,
-    "Jeffro": 0,
-    "Jeremie": 0,
-    "Joe": 0,
-    "Sam": 0,
-    "Marcello": 0,
-    "Miller": 0,
-    "Ferrari": 0,
-    "Trevor": 0,
-    "Victor": 0,
-}
+for index, row in gender.iterrows():
+    name = row['Name']
+    player_names.append(name)
 
-total_passes = {
-    "Anonymous": 0,
-    "Ali": 0,
-    "Annie": 0,
-    "Ella": 0,
-    "G": 0,
-    "Karin": 0,
-    "Katie P": 0,
-    "Ash": 0,
-    "Chewy": 0,
-    "Rachel": 0,
-    "Fina": 0,
-    "Tuna": 0,
-    "Visakha": 0,
-    "Alec": 0,
-    "Dzak": 0,
-    "Davin": 0,
-    "Jack A": 0,
-    "Jeffro": 0,
-    "Jeremie": 0,
-    "Joe": 0,
-    "Sam": 0,
-    "Marcello": 0,
-    "Miller": 0,
-    "Ferrari": 0,
-    "Trevor": 0,
-    "Victor": 0,
-}
-
-passes_to_eclairs_percentage = {
-    "Anonymous": 0,
-    "Ali": 0,
-    "Annie": 0,
-    "Ella": 0,
-    "G": 0,
-    "Karin": 0,
-    "Katie P": 0,
-    "Ash": 0,
-    "Chewy": 0,
-    "Rachel": 0,
-    "Fina": 0,
-    "Tuna": 0,
-    "Visakha": 0,
-    "Alec": 0,
-    "Dzak": 0,
-    "Davin": 0,
-    "Jack A": 0,
-    "Jeffro": 0,
-    "Jeremie": 0,
-    "Joe": 0,
-    "Sam": 0,
-    "Marcello": 0,
-    "Miller": 0,
-    "Ferrari": 0,
-    "Trevor": 0,
-    "Victor": 0,
-}
+total_passes_to_eclairs = dict.fromkeys(player_names, 0)
+total_passes = dict.fromkeys(player_names, 0)
+passes_to_eclairs_percentage = dict.fromkeys(player_names, 0)
 
 stats = stats[["Date/Time", "Tournamemnt", "Opponent", "Line", "Event Type", "Action", "Passer", "Receiver"]]
-stats = stats[stats.Tournamemnt == "Revolution 2022"]
+stats = stats[stats.Tournamemnt == "SFI 2023"]
 # stats = stats[(stats.Opponent == "BW") | (stats.Opponent == "Lights Out") | (stats.Opponent == "ABBQ")]
 # stats = stats[(stats.Opponent == "LIT") | (stats.Opponent == "Tower") | (stats.Opponent == "Robot")]
 stats = stats[(stats.Action == "Catch") | (stats.Action == "Goal")]
@@ -143,9 +65,10 @@ for index, row in stats.iterrows():
                 fritter_goals += 1
 
 for name in passes_to_eclairs_percentage.keys():
+    if total_passes[name] == 0:
+        continue
     passes_to_eclairs_percentage[name] = round(total_passes_to_eclairs[name]/total_passes[name], 2)
 
-print(stats)
 print("Eclair touches: ", eclair_receives)
 print("Fritter touches: ", fritter_receives)
 print("Eclair touch ratio: ", round(eclair_receives/(eclair_receives + fritter_receives) , 2))
@@ -155,4 +78,3 @@ print("Eclair goal ratio: ", round(eclair_goals/(eclair_goals + fritter_goals), 
 print("Percentage of fritter throws to eclairs: ", round(fritter_to_eclair_pass/fritter_passes, 2))
 print("Percentage of eclair throws to eclairs: ", round(eclair_to_eclair_pass/eclair_passes, 2))
 print("Percentage of throws to eclairs: ", passes_to_eclairs_percentage)
-
